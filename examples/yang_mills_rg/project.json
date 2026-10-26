@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "EXAMPLE-YM-RG-001",
+  "title": "One-loop SU(Nc) Yang–Mills running",
+  "stage": "construct",
+  "domain": "qft-eft",
+  "question": "Does direct fourth-order Runge–Kutta integration of the one-loop SU(Nc) beta function reproduce the independently integrated inverse-coupling relation on fixed positive RG-time samples?",
+  "theory": {
+    "object": "Four-dimensional SU(Nc) Yang–Mills theory with Nf massless Dirac fermions in the fundamental representation, restricted to the one-loop running-coupling ODE.",
+    "spacetime_dimension": "4",
+    "signature": "Minkowski (-,+,+,+); the running equation is an RG-time ODE and is signature-independent at this level.",
+    "units": "Natural units hbar=c=1. The gauge coupling and t=ln(mu/mu0) are dimensionless.",
+    "assumptions": [
+      "Nc is a positive integer and Nf is a nonnegative integer with b0=(11Nc-2Nf)/3>0.",
+      "Massless fundamental fermions; beta(g)=-b0*g^3/(16*pi^2), with no higher-loop terms.",
+      "Initial coupling g0=0.8 (alpha0=g0^2/(4*pi), perturbatively small); fixed positive RG times; no thresholds or changes of active Nf.",
+      "This equation and its numerical solution are a teaching example, not a fitted or phenomenological QCD prediction."
+    ],
+    "boundary_conditions": "g(t=0)=g0=0.8, evaluated at t=ln(mu/mu0) in {0.25,1,4,8}; no threshold crossing is included.",
+    "observable": "The dimensionless running coupling g(t) obtained by RK4 integration of dg/dt=-b0*g^3/(16*pi^2), compared pointwise with the integrated one-loop expression g(t)=[g0^-2+b0*t/(8*pi^2)]^-1/2.",
+    "regulator": "None: this finite-dimensional ODE example has no UV or IR regulator.",
+    "limit_order": "None; no continuum or perturbative-order limit is computed beyond declaring the one-loop truncation.",
+    "normalization": "t=ln(mu/mu0), beta(g)=dg/dt, and the conventional one-loop coefficient b0=11Nc/3-2Nf/3 for fundamental Dirac fermions."
+  },
+  "claim": {
+    "statement": "For the listed asymptotically-free SU(Nc) parameter cases and positive RG times, direct RK4 integration agrees with the one-loop inverse-coupling solution within the predeclared numerical-error gates.",
+    "status": "exploratory",
+    "scope": "A deterministic educational ODE cross-check for Nc=3, Nf in {0,3,6}, g0=0.8, the fixed time grid and RK4 step refinement recorded in calculation.py.",
+    "limitations": [
+      "The closed-form comparison independently integrates the same declared one-loop beta function; it is not an independent derivation of that beta coefficient.",
+      "No higher-loop running, scheme conversion, matching, quark-mass effects, threshold crossing, or experimental data are included.",
+      "Finite sampled agreement is not a theorem about arbitrary initial data or all RG times."
+    ],
+    "forbidden_inferences": [
+      "Do not present this as a real-QCD prediction, a precision determination of alpha_s, a measurement, or evidence for nonperturbative confinement.",
+      "Do not infer numerical agreement proves the beta-function coefficient or an all-orders statement."
+    ]
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "identifier": "https://doi.org/10.1103/PhysRevLett.30.1343",
+      "revision": "Published 25 June 1973; Crossref metadata queried for DOI 10.1103/PhysRevLett.30.1343.",
+      "locator": "Bibliographic metadata and title/abstract-level public description only; full article not read for this example.",
+      "relation": "background",
+      "verification": "metadata-only"
+    }
+  ],
+  "protocol": {
+    "mode": "exploratory",
+    "inputs": ["calculation.py", "notes.md"],
+    "command": ["{python}", "calculation.py", "{output}"],
+    "timeout_seconds": 30,
+    "outputs": ["result.json", "data.csv"],
+    "metrics": [
+      {"key": "max_abs_error", "op": "le", "threshold": 1e-10},
+      {"key": "max_refinement_difference", "op": "le", "threshold": 0.0001}
+    ],
+    "disconfirming": "A failed numerical threshold means this fixed-grid implementation did not meet its predeclared ODE agreement gate; it does not disconfirm asymptotic freedom or the one-loop formula globally.",
+    "independence": "The beta function, parameters and physical definition are shared. The ODE value is obtained by direct RK4 stepping; the comparator is obtained by analytically integrating d(1/g^2)/dt. These are distinct numerical/analytic implementations, not two independent derivations of the underlying theory or beta coefficient.",
+    "failure_interpretation": "A script error, invalid output or failed metric is an implementation/numerical-gate failure. A passing result checks this finite educational computation only and does not promote the exploratory claim status."
+  },
+  "authorization": {
+    "execution": "local-reviewed-only",
+    "network": false,
+    "publication": "human-only"
+  }
+}

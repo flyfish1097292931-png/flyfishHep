@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "EXAMPLE-ADS3-GEODESIC-001",
+  "title": "AdS3 fixed-cutoff spacelike geodesic length",
+  "stage": "construct",
+  "domain": "holography-gravity",
+  "question": "Does direct numerical integration of the bare spacelike geodesic arc length in a fixed Poincare AdS3 time slice reproduce its closed-form finite-cutoff length for endpoints at (±ell/2, epsilon)?",
+  "theory": {
+    "object": "A constant-t slice of Poincare AdS3 with metric ds^2=Lads^2*(dx^2+dz^2)/z^2, z>0.",
+    "spacetime_dimension": "3",
+    "signature": "Lorentzian AdS3 with signature (-,+,+); the fixed-time slice has the positive-definite hyperbolic metric shown in object.",
+    "units": "Coordinates x,z,epsilon and Lads have dimensions of length; the proper geodesic length also has dimension length. Ratios in the inverse hyperbolic sine and logarithm are dimensionless.",
+    "assumptions": [
+      "Poincare patch at fixed coordinate time; the bulk metric and Lads are fixed.",
+      "Cutoff surface z=epsilon>0 and endpoints x=±ell/2, with fixed coordinate separation ell>0.",
+      "The relevant geodesic is the semicircle x^2+z^2=R^2 orthogonal to z=0, with R^2=(ell/2)^2+epsilon^2.",
+      "Only the bare finite-cutoff proper length is computed; no subtraction, Newton constant, replica calculation, or field-theory entropy is part of this example."
+    ],
+    "boundary_conditions": "At the chosen fixed time, geodesic endpoints are (x,z)=(-ell/2,epsilon) and (+ell/2,epsilon); ell=2 and Lads=1.5 are held fixed while epsilon varies over {0.02,0.01,0.005,0.0025,0.00125}.",
+    "observable": "The un-subtracted proper length of the spacelike geodesic between the two stated cutoff endpoints; its comparator is 2*Lads*asinh(ell/(2*epsilon)).",
+    "regulator": "A finite radial cutoff z=epsilon at both endpoints. This is a finite-cutoff observable, not an already renormalized length or an exact entropy.",
+    "limit_order": "Only a finite-epsilon sequence and a finite-difference UV-log diagnostic are shown. The epsilon-to-zero asymptotic is not taken as an exact finite-cutoff identity with a logarithm.",
+    "normalization": "Proper length from the displayed metric with fixed Lads; no division by 4G_N and no finite counterterm/subtraction. Keep fixed ell distinct from fixed geodesic circle radius."
+  },
+  "claim": {
+    "statement": "For the declared finite cutoffs and fixed-coordinate-separation endpoints, adaptive numerical arc-length integration agrees with the closed-form bare geodesic length within the predeclared integration-error gate, while epsilon-halving differences diagnose the expected leading logarithmic coefficient.",
+    "status": "exploratory",
+    "scope": "One spacelike geodesic in a fixed Poincare AdS3 time slice with the listed ell, Lads and epsilon values; the UV coefficient is a finite-difference diagnostic only.",
+    "limitations": [
+      "The numerical integrand and the closed form encode the same specified geodesic geometry; this is an implementation cross-check, not an independent proof of the holographic dictionary.",
+      "The cutoff is finite. No finite subtraction, renormalized observable, Newton constant, replica construction, or boundary CFT entropy is evaluated.",
+      "The calculation fixes coordinate endpoint separation ell. At fixed circle radius R, endpoint separation would instead be 2*sqrt(R^2-epsilon^2); these are different regulator paths."
+    ],
+    "forbidden_inferences": [
+      "Do not call the computed finite-cutoff geodesic length an exact Ryu–Takayanagi entropy or an exact entanglement entropy.",
+      "Do not conflate fixed ell with fixed circle radius, or infer a physical CFT entropy without a justified holographic dictionary and normalization."
+    ]
+  },
+  "sources": [
+    {
+      "id": "S1",
+      "identifier": "https://arxiv.org/abs/hep-th/0603001v2",
+      "revision": "arXiv v2, last revised 7 March 2006; journal DOI 10.1103/PhysRevLett.96.181602.",
+      "locator": "arXiv bibliographic record and abstract read; Crossref journal metadata checked. Full paper derivation not read for this example.",
+      "relation": "background",
+      "verification": "read"
+    }
+  ],
+  "protocol": {
+    "mode": "exploratory",
+    "inputs": ["calculation.py", "notes.md"],
+    "command": ["{python}", "calculation.py", "{output}"],
+    "timeout_seconds": 30,
+    "outputs": ["result.json", "data.csv"],
+    "metrics": [
+      {"key": "max_abs_error", "op": "le", "threshold": 1e-10},
+      {"key": "max_quadrature_error_estimate", "op": "le", "threshold": 1e-10},
+      {"key": "uv_log_coefficient_relative_error", "op": "le", "threshold": 0.0002}
+    ],
+    "disconfirming": "Failure of a frozen numeric gate means this finite-cutoff quadrature/diagnostic did not meet its preregistered implementation criterion; it does not disprove a geodesic result, holography, or an entropy relation.",
+    "independence": "The geometry, endpoints and observable are shared. The primary value is an adaptive Simpson integration of the induced line element after a stated parameter change; the comparator evaluates the elementary closed-form expression. These are distinct numerical/analytic implementations, not independent derivations of AdS/CFT or of the geodesic equation.",
+    "failure_interpretation": "A script or quadrature error is an implementation failure. A metric miss is a finite numerical diagnostic miss. A pass checks only the stated finite-cutoff geometry and never promotes the length to an entropy or changes exploratory status."
+  },
+  "authorization": {
+    "execution": "local-reviewed-only",
+    "network": false,
+    "publication": "human-only"
+  }
+}

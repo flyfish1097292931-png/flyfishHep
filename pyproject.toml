@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "flyfishhep"
+version = "0.1.0"
+description = "An evidence-oriented high-energy theory research workflow"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "MIT"}
+authors = [{name = "Feiyu Deng"}]
+dependencies = []
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: Physics"
+]
+
+[project.urls]
+Repository = "https://github.com/flyfish1097292931-png/flyfishHep"
+Issues = "https://github.com/flyfish1097292931-png/flyfishHep/issues"
+
+[project.scripts]
+flyfishhep = "flyfishhep.cli:main"
+
+[tool.setuptools]
+packages = ["flyfishhep"]
