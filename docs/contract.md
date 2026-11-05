@@ -1,4 +1,4 @@
-# flyfishHep v0.1 contract
+# flyfishHep v0.2 contract (schema version 1)
 
 Status: implementation contract; not evidence of scientific generalization.
 
@@ -7,7 +7,7 @@ flyfishHep is an open-source-oriented, runtime-independent high-energy-theory re
 ## Delivered slice
 
 - A concise question-to-evidence workflow, HEP-specific on-demand modules, reusable project templates and an agent skill.
-- An offline Python 3.9+ standard-library CLI: `init`, `validate`, `freeze`, `run`, `audit`, `report`, `next`.
+- An offline Python 3.9+ standard-library CLI: `init`, `validate`, `freeze`, `run`, `audit`, `report`, `next`, `history`, `compare`.
 - Immutable-by-convention snapshots, content hashes, fresh run directories, explicit execution permission, typed numerical criteria, preserved failed runs.
 - Public pedagogical examples: one-loop Yang–Mills running and an AdS3 fixed-cutoff spacelike geodesic. These are development demonstrations, not novel results or held-out agent evaluation.
 - No personal memory, unpublished work, credentials, model-provider configuration, automatic network calls, publication or automatic scientific promotion.
@@ -74,7 +74,7 @@ Each workspace has `project.json`. Required structure:
 
 `stage`: incubate, construct, validate, write, suspended. `claim.status`: definition, cited, exploratory, conjectural, derived, numerical, checked, regulator-dependent, heuristic, toy-model, limitation, unsafe. Status is a researcher declaration, never a program-generated scientific verdict. `sources` may be empty with reading gaps recorded in notes; a quota does not establish coverage. Source verification: metadata-only, read, reproduced, unknown. Relations: background, antecedent, competitor, limitation. The runner does not verify citations or the claimed reading status.
 
-The executable slice accepts a reviewed Python entry point only: command must begin `{python}`, followed by an explicitly snapshotted relative `.py` input. `{output}` is replaced by the fresh output directory. No shell or arbitrary executables. Other tools, including Wolfram, are external/manual adapters in v0.1; do not claim those adapters ran.
+The executable slice accepts a reviewed Python entry point only: command must begin `{python}`, followed by an explicitly snapshotted relative `.py` input. `{output}` is replaced by the fresh output directory. No shell or arbitrary executables. Other tools, including Wolfram, are external/manual adapters in v0.2; do not claim those adapters ran.
 
 JSON container nesting is limited to 128 levels. Duplicate keys, nonfinite numeric literals, floating-point overflow (including extra metadata), and decoder errors are rejected as contract errors.
 
@@ -93,6 +93,26 @@ From an installed environment: `flyfishhep COMMAND ...`; from repository root: `
 - `next PATH`: propose the next bounded workflow step without model calls or execution. It is a deterministic navigator, not an autonomous researcher.
 
 Runs use unique IDs under `.flyfishhep/runs/`; run history is never overwritten. A process that produces an unhashable/unsafe packet (for example an oversized file or symlink) retains a terminal failure receipt with `files: null`, `outcome: non_answer`, and the exit/timeout facts. This is diagnostic-only evidence: `audit` and `report` refuse an incomplete inventory rather than certify it. A receipt's `outcome` is criteria_met, criteria_not_met, or non_answer. `scientific_status` remains the frozen declared claim status and `publication` remains human-only. Exit codes: 0 command completed (for audit, intact packet including a valid negative); 1 numerical criteria not met / failed computation; 2 invalid, incomplete, denied or corrupted evidence. Failed calculations still retain run receipts where the process started. No-run, interrupted-run and missing-evidence cases cannot become successful evidence.
+
+## Run history and comparison (v0.2)
+
+`history PATH` freshly audits every recorded run in stable run-ID order. It retains
+failed audits as refused rows, continues with other rows, and exits 2 if any row
+is refused. An empty history is labelled `no_runs`: exit 0 means the listing was
+produced, not that evidence exists. A missing workspace or invalid evidence-root
+path is refused. Current editable source need not still match a historical freeze.
+
+`compare PATH --left ID --right ID` audits both explicit IDs. A refused audit
+refuses the command (exit 2). Different freezes or incomplete computations give a
+successful descriptive report with `comparable: false`, a reason, and no numeric
+deltas. Only complete same-freeze criteria are paired; differences are right minus
+left. Non-representable differences are explicitly unavailable, never JSON infinity
+or NaN. Comparability is a software-contract condition, not physical equivalence,
+statistical significance, reproducibility certification or a scientific ranking.
+
+Both commands are read-only and never change source, evidence, scientific status
+or publication authorization. See [run-history.md](run-history.md) for examples.
+Project, freeze and receipt schemas remain version 1; no migration is required.
 
 ## Trust boundary
 
