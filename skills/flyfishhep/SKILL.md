@@ -1,7 +1,7 @@
 ---
 name: flyfishhep
 description: Use for high-energy theory research. Stage, test, report.
-version: 0.2.0
+version: 0.3.0
 author: Feiyu Deng, Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
@@ -12,7 +12,7 @@ metadata:
 
 # flyfishHep
 
-Guide a high-energy theory task from a live question to scoped evidence. This skill is an on-demand research protocol, not an automatic solver, scientific authority, or executor. Its instructions are cross-platform; the executable is verified only on the maintainer's local machine.
+Guide a high-energy theory task from a live question to scoped evidence. This skill is an on-demand research protocol, not an automatic solver, scientific authority, or executor. Its instructions are cross-platform; installed-package CI covers Linux and macOS, not every host or runtime.
 
 > 中文摘要：按问题选择阶段和领域方法，保留不确定性；不自动执行、晋升科学结论或安装到 Hermes。
 
@@ -28,8 +28,9 @@ Use when framing, deriving, checking, or writing a high-energy theory result. Do
 4. **Load one relevant domain module on demand.** Consult `docs/modules.md` only when its trigger matches. It contains method guidance, not implemented domain solvers. For cross-domain transfer, state the object map, preserved/lost structure, imported assumptions and failure domain.
 5. **Separate exploration from confirmation.** Explore freely but do not relabel a result confirmation retrospectively. Before a consequential test, fix the claim/scope, object, observable, evaluator, controls, success and disconfirming criteria. Check that the evaluator actually measures the stated physics. Changes after feedback require a new, disclosed test.
 6. **Use the CLI only within its contract.** Read `docs/contract.md`. The `next` command is deterministic navigation, not an LLM agent. The runner supports reviewed, snapshotted Python only; execution is local and not sandboxed. Never pass credentials or run untrusted code. Execute only with explicit authorization and `--allow-exec`; audit the exact run and preserve failures. Use `history` to inspect recorded runs and `compare --left ID --right ID` for explicit, freshly audited comparisons; different freezes are non-comparable and numerical deltas are not scientific rankings.
-7. **Report a scoped result.** Distinguish source-reported, derived, numerical, independently checked, heuristic, toy-model, negative, and unresolved outcomes. State assumptions and limitations. Hashes and software PASS do not certify physics.
-8. **Stop at the boundary.** Stop on user request, budget or authority limit, unsafe/missing capability, changed object/evaluator, or an uninformative next test. Offer the smallest useful next step. Claim promotion, submission, publication, and external side effects remain human-authorized.
+7. **Preserve a compact handoff.** For literature, analytic or computational work, use `handoff init/show/update/history` as described in `docs/research-handoff.md`. Give the host the current question, assumptions, open questions and one next check; return only observations actually obtained, linked to the prior check revision. Evidence references are reported-only, and requested actions never grant permissions. Keep confirmation conditions fixed or explicitly return to exploration.
+8. **Report a scoped result.** Distinguish source-reported, derived, numerical, independently checked, heuristic, toy-model, negative, and unresolved outcomes. State assumptions and limitations. Hashes and software PASS do not certify physics.
+9. **Stop at the boundary.** Stop on user request, budget or authority limit, unsafe/missing capability, changed object/evaluator, or an uninformative next test. Offer the smallest useful next step. Claim promotion, submission, publication, and external side effects remain human-authorized.
 
 ## Hermes Setup (Opt-in)
 

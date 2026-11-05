@@ -1,16 +1,32 @@
 # Agent integration
 
-This file describes the implemented v0.1 boundary and an optional future adapter shape, not a prebuilt model or autonomous agent. The local CLI has no LLM, browser, literature connector, domain-specific physics solver, cloud compute, multi-agent runner, checkpointing, or cross-session memory. `next` is deterministic navigation only.
+This file describes the implemented v0.3 boundary and an optional future controller, not a prebuilt model or autonomous agent. The CLI provides a versioned research handoff that a host can export and resume across sessions. It has no LLM, browser, literature connector, domain-specific physics solver, cloud compute, multi-agent runner, process checkpoint/resume or automatic memory retrieval. `next` remains deterministic numerical-workflow navigation only.
 
-> 中文摘要：v0.1 只提供本地、受限的证据运行与确定性导航；Hermes skill 由用户显式配置目录并手动加载，不会自动安装。
+> 中文摘要：v0.3 支持独立于数值项目的研究交接记录，以及本地证据运行与确定性导航；模型推理、检索和权限控制仍由宿主负责。Hermes skill 需用户手动配置和加载。
 
-## v0.1 command and data boundary
+## Calculation command and data boundary
 
 The agent reads/writes the human research record and project `project.json`. Runner state is confined by convention to `.flyfishhep/freezes/<content-digest>/` (frozen `project.json` plus declared inputs) and `.flyfishhep/runs/<run_id>/` (unique receipt, logs and declared outputs); past freezes and failed runs are preserved. `report` is a view, not a scientific claim. Verify source drift and audit the exact run before citing it.
 
 The only executable path is a reviewed, explicitly snapshotted relative `.py` entry point with command beginning `{python}`; `{output}` resolves to the fresh output directory. `result.json` must carry finite-real metrics and the runner recomputes declared `le`, `ge`, or `eq` criteria; it ignores a script's self-reported PASS. It does not verify evaluator fidelity, citations, undeclared code dependencies, physical validity, or ambient OS permissions. No shell command or arbitrary executable is supported by this contract. Network denial is policy intent, not an enforced firewall. Never pass credentials or run untrusted code; isolate with OS/container controls separately.
 
-## Optional future model/tool adapter (not implemented in v0.1)
+## Implemented research handoff (v0.3)
+
+`handoff init/show/update/history` provides a standalone `research.json` journal.
+It works without a numerical `project.json`. The host reads `show`, proposes one
+check, performs authorized work outside this CLI, and returns an observation bound
+to an existing check revision through `update --base REVISION --from FILE`.
+The revision chain preserves old questions and failures; stale-base updates are
+refused. See [research-handoff.md](research-handoff.md) for the exercised interface.
+
+Source/derivation references and observation text are reported-only. The host must
+inspect the actual source, derivation or audited run; a valid handoff cannot prove
+a tool ran. Requested actions are never permission grants. The handoff does not
+change calculation-project stages, frozen criteria or execution authorization.
+If those records disagree, resolve the disagreement instead of letting a handoff
+silently override a suspended or unauthorized calculation.
+
+## Optional future model/tool controller (not implemented)
 
 If a later host supplies a model and task-specific tools, a bounded adapter may use this boundary. These statuses below are proposal vocabulary, not outputs currently emitted by the CLI:
 
@@ -48,7 +64,7 @@ skills:
 
 Set `FLYFISHHEP_ROOT` in the environment that launches Hermes, or replace it with the user's actual absolute checkout root. Once it appears in Hermes' skill surfaces, the user manually invokes `/flyfishhep`. External skill directories are mutable when writable by Hermes; protect the checkout with filesystem permissions if edits are not intended. This repository does not change a profile, install a skill, add a provider, or copy personal memory. See [Hermes Agent Skills System](https://hermes-agent.nousresearch.com/docs/user-guide/features/skills/).
 
-The skill text is portable across platforms. The executable has been verified only on the maintainer's local machine; no broader runtime portability or cross-platform test coverage is implied.
+The skill text is portable across platforms. CI exercises the installed CLI on Linux and macOS; this is software compatibility evidence, not proof of host integration, security isolation or scientific effectiveness. Windows is not covered by that CI matrix.
 
 For another agent runtime, use the same JSON schema, filesystem CLI and role-neutral decision contract. Do not make Hermes session IDs or hidden prompts canonical research objects.
 

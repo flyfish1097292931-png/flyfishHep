@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.3.0 — alpha: research handoffs
+
+- Add a lightweight, versioned `handoff init/show/update/history` loop for analytic, literature and computational research records, independent of the numerical project contract.
+- Keep questions, assumptions, open problems, source/derivation references, checks, observations and decisions in one exportable record; bind observations to existing check revisions.
+- Preserve exploration versus confirmation, require changed confirmation conditions to return to exploration, reject stale updates and retain the complete revision chain.
+- Keep requested actions separate from authorization; no model, network, autonomous execution, scientific certification or new runtime dependency is added.
+- Existing schema-1 calculation projects, receipts and v0.2 commands remain compatible. CLI argument errors now emit JSON on stdout with exit 2 instead of argparse usage/error on stderr; help/version output remains unchanged.
+- Reject oversized cumulative handoff journals before replacing the prior readable history.
+
 ## 0.2.0 — alpha: audited history and comparison
 
 - Add read-only `history` to audit all recorded runs, retaining refused/incomplete entries rather than hiding them behind an older success.

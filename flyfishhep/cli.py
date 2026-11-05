@@ -1,11 +1,17 @@
 """Command line interface: JSON on stdout, explicit failures, no hidden actions."""
 import argparse
 import json
-from . import __version__, core, runner, workflow, history
+from . import __version__, core, runner, workflow, history, handoff
+from .validation import read_json
+
+
+class _JSONArgumentParser(argparse.ArgumentParser):
+    def error(self, message):
+        raise core.ContractError(message)
 
 
 def main(argv=None):
-    parser = argparse.ArgumentParser(prog="flyfishhep", description="flyfishHep local research evidence tools")
+    parser = _JSONArgumentParser(prog="flyfishhep", description="flyfishHep local research evidence tools")
     parser.add_argument("--version", action="version", version=__version__)
     commands = parser.add_subparsers(dest="command", required=True)
     init = commands.add_parser("init", help="create a new incomplete research workspace")
@@ -28,9 +34,33 @@ def main(argv=None):
     compare.add_argument("path")
     compare.add_argument("--left", required=True)
     compare.add_argument("--right", required=True)
-    args = parser.parse_args(argv)
+    handoffs = commands.add_parser('handoff', help='local research reports; never execution authorization')
+    operations = handoffs.add_subparsers(dest='operation', required=True)
+    for name in ('init', 'show', 'update', 'history'):
+        operation = operations.add_parser(name)
+        operation.add_argument('path')
+        if name == 'init':
+            operation.add_argument('--id', required=True)
+            operation.add_argument('--question', required=True)
+        elif name == 'show':
+            operation.add_argument('--record-only', action='store_true')
+        elif name == 'update':
+            operation.add_argument('--from', dest='source', required=True)
+            operation.add_argument('--base', required=True)
     try:
-        if args.command == "init":
+        args = parser.parse_args(argv)
+        if args.command == 'handoff':
+            if args.operation == 'init':
+                result = handoff.initialize_handoff(args.path, args.id, args.question)
+            elif args.operation == 'update':
+                result = handoff.update_handoff(args.path, read_json(args.source), args.base)
+            elif args.operation == 'history':
+                result = handoff.handoff_history(args.path)
+            else:
+                result = handoff.show_handoff(args.path)
+                if args.record_only:
+                    result = result['record']
+        elif args.command == "init":
             result = core.initialize(args.path, args.id, args.domain)
         elif args.command == "validate":
             result = core.validate_project(args.path)
