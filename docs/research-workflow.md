@@ -55,10 +55,24 @@ Use three distinct outcomes: **physics-negative** (an adequately implemented, sc
 
 Do not make all six checks compulsory for every task. Choose those with a named failure mode capable of changing truth status.
 
+## Lightweight research records
+
+Use `handoff init/show/update/history` to preserve the question, assumptions,
+open questions, evidence references, next check and returned observation without
+requiring a numerical project. Exploration can remain incomplete. Confirmation
+requires a specified check; changing its question, assumptions or method returns
+to exploration while retaining the earlier registration. Observations identify
+the existing revision whose check they concern. Starting confirmation requires explicitly setting
+`observation: null`; an exploratory result cannot be relabelled a confirmation.
+
+This records a declared research process, not proof that a source was read or a
+derivation was correct. Host permissions still control actual work. See the
+[handoff guide](research-handoff.md) for the complete executable path.
+
 ## Claim and handoff
 
 A concise handoff contains object/conventions, frozen question, result or present blockage, evidence locations, failed candidates, unresolved assumptions, exact next discriminator, and permitted action. Distinguish a valid scoped physics-negative from implementation/evaluator failure, source unavailability, incomplete evidence, and a budget/authorization stop. A missed criterion is not automatically a physical no-go. A workflow/runner `PASS` is limited to its own invariant. It cannot turn `exploratory` into `derived`, `checked`, or publication-ready.
 
-The v0.1 `flyfishhep next` command is a deterministic navigator, not an LLM agent: its suggestion does not search, derive, authorize, execute, or validate physics. See [`contract.md`](contract.md) for runtime boundaries and [`modules.md`](modules.md) for triggered methods only.
+The `flyfishhep next` command is a deterministic navigator, not an LLM agent: its suggestion does not search, derive, authorize, execute, or validate physics. See [`contract.md`](contract.md) for runtime boundaries and [`modules.md`](modules.md) for triggered methods only.
 
 Where an authorized project control plane exists, update it in the same work cycle. Keep project files authoritative for scientific claims; task boards are execution status, not evidence.

@@ -1,4 +1,4 @@
-# flyfishHep v0.2 contract (schema version 1)
+# flyfishHep v0.3 contract (calculation schema version 1)
 
 Status: implementation contract; not evidence of scientific generalization.
 
@@ -7,14 +7,14 @@ flyfishHep is an open-source-oriented, runtime-independent high-energy-theory re
 ## Delivered slice
 
 - A concise question-to-evidence workflow, HEP-specific on-demand modules, reusable project templates and an agent skill.
-- An offline Python 3.9+ standard-library CLI: `init`, `validate`, `freeze`, `run`, `audit`, `report`, `next`, `history`, `compare`.
+- An offline Python 3.9+ standard-library CLI: `init`, `validate`, `freeze`, `run`, `audit`, `report`, `next`, `history`, `compare`, and `handoff init/show/update/history`.
 - Immutable-by-convention snapshots, content hashes, fresh run directories, explicit execution permission, typed numerical criteria, preserved failed runs.
 - Public pedagogical examples: one-loop Yang–Mills running and an AdS3 fixed-cutoff spacelike geodesic. These are development demonstrations, not novel results or held-out agent evaluation.
 - No personal memory, unpublished work, credentials, model-provider configuration, automatic network calls, publication or automatic scientific promotion.
 
 ## Project file
 
-Each workspace has `project.json`. Required structure:
+A numerical calculation workspace has `project.json`. A standalone research handoff does not require it. The calculation contract has the following required structure:
 
 ```json
 {
@@ -74,7 +74,7 @@ Each workspace has `project.json`. Required structure:
 
 `stage`: incubate, construct, validate, write, suspended. `claim.status`: definition, cited, exploratory, conjectural, derived, numerical, checked, regulator-dependent, heuristic, toy-model, limitation, unsafe. Status is a researcher declaration, never a program-generated scientific verdict. `sources` may be empty with reading gaps recorded in notes; a quota does not establish coverage. Source verification: metadata-only, read, reproduced, unknown. Relations: background, antecedent, competitor, limitation. The runner does not verify citations or the claimed reading status.
 
-The executable slice accepts a reviewed Python entry point only: command must begin `{python}`, followed by an explicitly snapshotted relative `.py` input. `{output}` is replaced by the fresh output directory. No shell or arbitrary executables. Other tools, including Wolfram, are external/manual adapters in v0.2; do not claim those adapters ran.
+The executable slice accepts a reviewed Python entry point only: command must begin `{python}`, followed by an explicitly snapshotted relative `.py` input. `{output}` is replaced by the fresh output directory. No shell or arbitrary executables. Other tools, including Wolfram, are external/manual adapters in v0.3; do not claim those adapters ran.
 
 JSON container nesting is limited to 128 levels. Duplicate keys, nonfinite numeric literals, floating-point overflow (including extra metadata), and decoder errors are rejected as contract errors.
 
@@ -113,6 +113,26 @@ statistical significance, reproducibility certification or a scientific ranking.
 Both commands are read-only and never change source, evidence, scientific status
 or publication authorization. See [run-history.md](run-history.md) for examples.
 Project, freeze and receipt schemas remain version 1; no migration is required.
+
+## Research handoff journal (v0.3, independent schema version 1)
+
+- `handoff init PATH --id ID --question TEXT`: initialize `research.json` without requiring a numerical project; never overwrite an existing journal.
+- `handoff show PATH [--record-only]`: validate and export current context, or just the editable record.
+- `handoff update PATH --from FILE --base REVISION`: validate a proposed record against the exact current revision, then append it to the journal atomically under an exclusive lock. Past records are retained.
+- `handoff history PATH`: validate and expose the retained revision chain.
+
+Records include question, mode (`explore`/`confirm`), state, assumptions, open
+questions, evidence references, next check, observation, decision, requested
+actions and stop conditions. Confirmation requires a check; changes to registered
+question/assumptions/check require exploration with `decision: revise`. Starting
+confirmation requires the caller to set `observation: null`. Confirmation observations must bind
+to an existing matching confirmation check, not an exploratory result.
+
+Observation references identify earlier checks and declared evidence IDs; they
+never certify execution, source accuracy or scientific validity. A prior
+observation for a changed check is historical, not current completion. Requested
+actions and stops must be enforced by the host, not this journal. No numerical
+project, freeze or receipt schema changes. See [research-handoff.md](research-handoff.md).
 
 ## Trust boundary
 

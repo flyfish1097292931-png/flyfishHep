@@ -4,7 +4,7 @@
 
 `flyfishHep` separates a reusable research process from personal memory and project history. Its small local runner can freeze a reviewed calculation, execute it on copied inputs after explicit opt-in, retain outputs and failures, and check declared numerical criteria. Domain modules give problem-specific working methods; they do not claim that the software solves every topic.
 
-> **Status: v0.2.0 alpha.** Code execution is not sandboxed. Integrity checks do not establish that a physical question was posed correctly or a claim is true. No autonomous scientific discovery, broad generalization, new result, independent citation check, or publication approval is implied.
+> **Status: v0.3.0 alpha.** Code execution is not sandboxed. Integrity checks do not establish that a physical question was posed correctly or a claim is true. No autonomous scientific discovery, broad generalization, new result, independent citation check, or publication approval is implied.
 
 [简体中文] `flyfishHep` 是可移植的高能理论研究工作流原型：保存问题、假设、计算协议和证据，再由研究者判断其物理意义。它不是自动物理发现系统，也不认证论文结论。
 
@@ -42,6 +42,29 @@ flyfishhep next ../flyfishhep-ym-demo
 ```
 
 `init` creates an incomplete draft. The same reviewed candidate must be valid and frozen before `run`. Inspect every input program and its imports **before** running it. The runner retains the project’s declared claim status; its positive exit means only that the declared metrics satisfy the declared thresholds and the packet can be checked.
+
+## Research without a numerical calculation
+
+```bash
+flyfishhep handoff init "$HOME/flyfishhep-notes" --id ANALYTIC-001 --question "Which assumption needs checking?"
+flyfishhep handoff show "$HOME/flyfishhep-notes"
+flyfishhep handoff show "$HOME/flyfishhep-notes" --record-only > candidate.json
+# A researcher or host edits candidate.json after planning or doing a real check.
+flyfishhep handoff update "$HOME/flyfishhep-notes" --from candidate.json --base REVISION
+flyfishhep handoff history "$HOME/flyfishhep-notes"
+```
+
+This independent `research.json` journal records the question, assumptions, open
+questions, evidence references, next check, observation and decision. It needs no
+`project.json`, executable code or numerical criterion. Export it to an AI host,
+perform an authorized check there, and return an observation bound to the earlier
+check revision. Requested actions are not permission grants; source and derivation
+references are reported, not automatically verified. Confirmation changes return
+to exploration, and stale updates cannot silently overwrite newer records.
+
+The software implements the handoff and integrity checks, not model reasoning,
+tool execution or demonstrated scientific improvement. See the complete
+[research-handoff guide](docs/research-handoff.md).
 
 ## Inspect and compare recorded runs
 

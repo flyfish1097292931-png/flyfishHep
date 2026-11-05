@@ -1,6 +1,6 @@
 # Project status and scope
 
-`flyfishHep` v0.2.0 is an alpha research-workflow toolkit distributed under MIT. It is an original standalone project; using or installing it does not modify an existing Hermes configuration or profile.
+`flyfishHep` v0.3.0 is an alpha research-workflow toolkit distributed under MIT. It is an original standalone project; using or installing it does not modify an existing Hermes configuration or profile.
 
 ## Implemented and exercised
 
@@ -8,6 +8,8 @@
 - Python 3.9+ standard-library CLI for drafts, strict contract validation, content-addressed snapshots, explicit local execution, retained receipts, recomputed numerical criteria, audit, report and a deterministic next-step navigator.
 - Read-only audited run history and provenance-aware same-freeze criterion comparison; damaged and non-comparable evidence remains explicit.
 - Two elementary public-source demonstrations under `examples/`, exercised through the installed CLI.
+
+- A standalone versioned research handoff (`research.json`) for analytic/literature work as well as numerical projects; complete export/host-observation/update flow, stale-base refusal and confirmation-to-exploration transitions.
 
 ## Not established / excluded
 
