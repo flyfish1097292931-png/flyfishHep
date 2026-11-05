@@ -4,7 +4,7 @@
 
 `flyfishHep` separates a reusable research process from personal memory and project history. Its small local runner can freeze a reviewed calculation, execute it on copied inputs after explicit opt-in, retain outputs and failures, and check declared numerical criteria. Domain modules give problem-specific working methods; they do not claim that the software solves every topic.
 
-> **Status: v0.1.0 alpha.** Code execution is not sandboxed. Integrity checks do not establish that a physical question was posed correctly or a claim is true. No autonomous scientific discovery, broad generalization, new result, independent citation check, or publication approval is implied.
+> **Status: v0.2.0 alpha.** Code execution is not sandboxed. Integrity checks do not establish that a physical question was posed correctly or a claim is true. No autonomous scientific discovery, broad generalization, new result, independent citation check, or publication approval is implied.
 
 [简体中文] `flyfishHep` 是可移植的高能理论研究工作流原型：保存问题、假设、计算协议和证据，再由研究者判断其物理意义。它不是自动物理发现系统，也不认证论文结论。
 
@@ -42,6 +42,29 @@ flyfishhep next ../flyfishhep-ym-demo
 ```
 
 `init` creates an incomplete draft. The same reviewed candidate must be valid and frozen before `run`. Inspect every input program and its imports **before** running it. The runner retains the project’s declared claim status; its positive exit means only that the declared metrics satisfy the declared thresholds and the packet can be checked.
+
+## Inspect and compare recorded runs
+
+```bash
+flyfishhep history ../flyfishhep-ym-demo
+flyfishhep compare ../flyfishhep-ym-demo --left RUN_ID_A --right RUN_ID_B
+```
+
+Both commands are read-only: they neither execute calculations nor repair evidence.
+`history` audits each recorded run instead of trusting cached verdicts, preserving
+invalid or unfinished entries in the listing. A damaged entry does not hide other
+runs; any refused entry makes the command exit with code 2. An empty history is
+explicitly no evidence, not a successful calculation.
+
+`compare` requires two explicit run IDs and freshly audits both. It reports
+criterion values and right-minus-left differences only for compatible, complete
+runs from the same frozen input set. Different freezes or incomplete results are
+reported as non-comparable, with no numerical deltas. Current-source drift remains
+visible. A smaller number is not automatically a better scientific result; no
+scientific status is promoted. See [the history and comparison guide](docs/run-history.md).
+
+Existing schema-1 projects, freezes and receipts remain readable; no migration is
+required. Runtime dependencies remain standard-library only.
 
 ## Design
 

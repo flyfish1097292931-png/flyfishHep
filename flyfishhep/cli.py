@@ -1,7 +1,7 @@
 """Command line interface: JSON on stdout, explicit failures, no hidden actions."""
 import argparse
 import json
-from . import __version__, core, runner, workflow
+from . import __version__, core, runner, workflow, history
 
 
 def main(argv=None):
@@ -12,7 +12,7 @@ def main(argv=None):
     init.add_argument("path")
     init.add_argument("--id", required=True)
     init.add_argument("--domain", default="qft-eft")
-    for name in ("validate", "freeze"):
+    for name in ("validate", "freeze", "history"):
         command = commands.add_parser(name)
         command.add_argument("path")
     run = commands.add_parser("run", help="execute reviewed Python code; NOT a sandbox")
@@ -24,6 +24,10 @@ def main(argv=None):
         cmd.add_argument("--run")
     navigator = commands.add_parser("next", help="read-only deterministic next-step suggestion")
     navigator.add_argument("path")
+    compare = commands.add_parser("compare", help="read-only comparison of two audited runs; no ranking")
+    compare.add_argument("path")
+    compare.add_argument("--left", required=True)
+    compare.add_argument("--right", required=True)
     args = parser.parse_args(argv)
     try:
         if args.command == "init":
@@ -34,6 +38,10 @@ def main(argv=None):
             result = core.freeze_project(args.path)
         elif args.command == "run":
             result = runner.run_project(args.path, args.allow_exec)
+        elif args.command == "history":
+            result = history.history_project(args.path)
+        elif args.command == "compare":
+            result = history.compare_runs(args.path, args.left, args.right)
         elif args.command == "next":
             result = workflow.next_action(args.path)
         elif args.command == "report":
@@ -42,6 +50,8 @@ def main(argv=None):
         else:
             result = runner.audit_project(args.path, args.run)
         print(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False))
+        if args.command in {"history", "compare"} and result["status"] == "refused":
+            return 2
         return 1 if args.command == "run" and result["outcome"] != "criteria_met" else 0
     except (core.ContractError, OSError, ValueError) as exc:
         print(json.dumps({"status": "refused", "error": str(exc)}, ensure_ascii=False))
