@@ -1,6 +1,6 @@
 # Project status and scope
 
-`flyfishHep` v0.4.0 is an **unreleased alpha candidate** research-workflow toolkit distributed under MIT. It is an original standalone project; using or installing it does not modify an existing Hermes configuration or profile.
+`flyfishHep` v0.4.0 is an **alpha** research-workflow toolkit distributed under MIT. It is an original standalone project; using or installing it does not modify an existing Hermes configuration or profile.
 
 ## Implemented and exercised
 

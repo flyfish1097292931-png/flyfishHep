@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0 — alpha candidate (unreleased): evidence, bounded host work and maintenance
+## 0.4.0 — alpha: evidence, bounded host work and maintenance
 
 - Bind local evidence to relative paths, exact content hashes and locators; freshly check drift, missing sources and explicit audited-run references without promoting scientific validity.
 - Add compact research actions using the existing revision/confirmation contract instead of replacing the complete JSON record for every small step.
