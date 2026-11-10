@@ -44,6 +44,53 @@ class ReleaseRegressions(unittest.TestCase):
         self.assertTrue((directory / "receipt.sha256").is_file())
         return result, receipt, directory
 
+    def test_runner_expected_freeze_mismatch_has_no_run_side_effects(self):
+        from unittest.mock import patch
+        from flyfishhep import core, runner
+        from flyfishhep.exceptions import ContractError
+        self.populated()
+        approved = core.source_snapshot(self.project)[4]
+        source = self.project / 'calculate.py'
+        source.write_text(NORMAL + '# Ordinary updated input.\n', encoding='utf-8')
+        changed = core.freeze_project(self.project)['freeze_id']
+        self.assertNotEqual(approved, changed)
+        with patch.object(runner.subprocess, 'run') as launch, \
+                patch.object(runner.shutil, 'copytree') as copy:
+            with self.assertRaisesRegex(ContractError, 'approved freeze'):
+                runner.run_project(self.project, True, expected_freeze_id=approved)
+            launch.assert_not_called()
+            copy.assert_not_called()
+        self.assertFalse((self.project / '.flyfishhep/runs').exists())
+
+    def test_runner_expected_freeze_binds_exact_launch_workspace(self):
+        from unittest.mock import patch
+        from flyfishhep import core, runner
+        self.populated()
+        approved = core.source_snapshot(self.project)[4]
+        original_load = runner.load_freeze
+        original_launch = runner.subprocess.run
+        def load_then_update_source(root, freeze_id):
+            loaded = original_load(root, freeze_id)
+            # Later live-source edits must not select a different launch input.
+            (self.project / 'calculate.py').write_text(NORMAL + '# Later live edit.\n', encoding='utf-8')
+            return loaded
+        def checked_launch(argv, **kwargs):
+            self.assertEqual((kwargs['cwd'] / 'calculate.py').read_text(), NORMAL)
+            self.assertEqual(argv[1:6], ['-B', '-E', '-s', '--', 'calculate.py'])
+            return original_launch(argv, **kwargs)
+        with patch.object(runner, 'load_freeze', side_effect=load_then_update_source), \
+                patch.object(runner.subprocess, 'run', side_effect=checked_launch) as launch:
+            receipt = runner.run_project(self.project, True, expected_freeze_id=approved)
+        launch.assert_called_once()
+        self.assertEqual(receipt['freeze_id'], approved)
+        self.assertEqual(receipt['outcome'], 'criteria_met')
+        self.assertEqual(receipt['runtime']['runner_sources'], runner.runner_identity())
+        self.assertEqual(runner.audit_project(self.project, receipt['run_id'])['integrity'], 'verified')
+        # Original positional API and explicit None retain standalone behavior.
+        core.freeze_project(self.project)
+        self.assertEqual(runner.run_project(self.project, True)['outcome'], 'criteria_met')
+        self.assertEqual(runner.run_project(self.project, True, expected_freeze_id=None)['outcome'], 'criteria_met')
+
     def test_s1_option_shaped_entry_executes_frozen_file_contents(self):
         entry = "-cimport pathlib,sys,json;pathlib.Path(sys.argv[1],'result.json').write_text(json.dumps(dict(metrics=dict(error=0))))#.py"
         self.populated("print('FROZEN_FILE_EXECUTED', flush=True)\nraise RuntimeError('frozen failure')\n", entry=entry)

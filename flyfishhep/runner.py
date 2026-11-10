@@ -69,7 +69,8 @@ def packet_files(directory):
             if name not in {"receipt.json", "receipt.sha256"}}
 
 
-def run_project(root, allow_exec=False):
+def run_project(root, allow_exec=False, expected_freeze_id=None):
+    """Run matching frozen inputs; optionally require the caller-approved freeze."""
     if not allow_exec:
         raise ContractError("execution denied; inspect source then explicitly pass --allow-exec (not a sandbox)")
     root = Path(root)
@@ -78,6 +79,10 @@ def run_project(root, allow_exec=False):
         raise ContractError("suspended project cannot run")
     # A matching freeze must already exist. Do not silently freeze changed inputs.
     spec, frozen, manifest = load_freeze(root, freeze_id)
+    # Bind approval to the exact validated packet used below, not a host precheck.
+    # Refuse before creating a run directory, copying inputs or launching Python.
+    if expected_freeze_id is not None and freeze_id != expected_freeze_id:
+        raise ContractError("selected freeze differs from caller-approved freeze")
     run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ") + "-" + uuid.uuid4().hex[:8]
     directory = safe_path(root, ".flyfishhep/runs/" + run_id)
     directory.mkdir(parents=True, exist_ok=False)

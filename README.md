@@ -4,7 +4,7 @@
 
 `flyfishHep` separates a reusable research process from personal memory and project history. Its small local runner can freeze a reviewed calculation, execute it on copied inputs after explicit opt-in, retain outputs and failures, and check declared numerical criteria. Domain modules give problem-specific working methods; they do not claim that the software solves every topic.
 
-> **Status: v0.3.0 alpha.** Code execution is not sandboxed. Integrity checks do not establish that a physical question was posed correctly or a claim is true. No autonomous scientific discovery, broad generalization, new result, independent citation check, or publication approval is implied.
+> **Status: v0.4.0 alpha.** Code execution is not sandboxed. Integrity checks do not establish that a physical question was posed correctly or a claim is true. No autonomous scientific discovery, broad generalization, new result, independent citation check, or publication approval is implied.
 
 [简体中文] `flyfishHep` 是可移植的高能理论研究工作流原型：保存问题、假设、计算协议和证据，再由研究者判断其物理意义。它不是自动物理发现系统，也不认证论文结论。
 
@@ -62,9 +62,24 @@ check revision. Requested actions are not permission grants; source and derivati
 references are reported, not automatically verified. Confirmation changes return
 to exploration, and stale updates cannot silently overwrite newer records.
 
-The software implements the handoff and integrity checks, not model reasoning,
-tool execution or demonstrated scientific improvement. See the complete
+The software implements records and integrity checks, not model reasoning or
+scientific judgment. v0.4 also provides [evidence bindings and short actions](docs/evidence.md):
+register a question/check/observation without rewriting the whole record, and
+check whether explicitly bound local files or exact run packets are still current.
+Unbound references remain reported-only; locators do not verify source meaning.
+
+An opt-in [bounded host adapter](docs/host-loop.md) prepares a specific check,
+requires an explicit scoped grant, saves actual read/audit/Python output, and
+accepts it separately. Interrupted uncertain attempts are not automatically replayed.
+This is not a model controller or sandbox. See the complete
 [research-handoff guide](docs/research-handoff.md).
+
+The [model-independent maintenance script](docs/maintenance.md) can run reviewed
+tests/examples and collect read-only GitHub observations without calling an LLM.
+The [executed task-comparison pilot](docs/pilot-evaluation.md) did not demonstrate
+a substantive correctness gain and observed additional wall-time overhead. Keep
+the workflow optional, not a mandatory wrapper around a simple derivation.
+Research effectiveness remains separate from these software checks.
 
 ## Inspect and compare recorded runs
 

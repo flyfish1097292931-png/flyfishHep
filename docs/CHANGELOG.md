@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0 — alpha candidate (unreleased): evidence, bounded host work and maintenance
+
+- Bind local evidence to relative paths, exact content hashes and locators; freshly check drift, missing sources and explicit audited-run references without promoting scientific validity.
+- Add compact research actions using the existing revision/confirmation contract instead of replacing the complete JSON record for every small step.
+- Add an opt-in bounded host adapter with durable requests/results and non-replay handling of interrupted execution; requested actions remain separate from grants.
+- Add model-independent deterministic maintenance checks and an openly limited task-comparison protocol; software acceptance and research-effectiveness evidence remain separate.
+- Preserve existing numerical schema-1 workspaces and old handoff histories. No new runtime dependency or automatic model/network controller.
+- Constrain opt-in host Python execution to its approved freeze inside the runner before launch; reconcile already-committed acceptance after later suspension without rewriting the handoff.
+- Disable implicit Git helpers in maintenance observations; retain reviewed-code execution consent and explicit failure/unknown states.
+- Execute four fresh pilot sessions on two source-bound tasks. No substantive correctness gain demonstrated; keep the workflow optional and disclose protocol deviations. See [pilot-evaluation.md](pilot-evaluation.md).
+
 ## 0.3.0 — alpha: research handoffs
 
 - Add a lightweight, versioned `handoff init/show/update/history` loop for analytic, literature and computational research records, independent of the numerical project contract.

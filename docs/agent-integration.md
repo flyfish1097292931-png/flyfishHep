@@ -1,8 +1,8 @@
 # Agent integration
 
-This file describes the implemented v0.3 boundary and an optional future controller, not a prebuilt model or autonomous agent. The CLI provides a versioned research handoff that a host can export and resume across sessions. It has no LLM, browser, literature connector, domain-specific physics solver, cloud compute, multi-agent runner, process checkpoint/resume or automatic memory retrieval. `next` remains deterministic numerical-workflow navigation only.
+This file describes the v0.4 boundary and an optional future model controller, not a prebuilt model or autonomous scientific agent. The CLI provides a versioned research handoff that a host can export and resume across sessions. It has no LLM, browser, literature connector, domain-specific physics solver, cloud compute, multi-agent runner, process-memory checkpoint/resume or automatic memory retrieval. The opt-in host adapter resumes retained results, not a running process. `next` remains deterministic numerical-workflow navigation only.
 
-> 中文摘要：v0.3 支持独立于数值项目的研究交接记录，以及本地证据运行与确定性导航；模型推理、检索和权限控制仍由宿主负责。Hermes skill 需用户手动配置和加载。
+> 中文摘要：v0.4 在研究交接上增加证据绑定、快捷操作与显式授权的有界宿主工具。模型推理、检索、科学判断和外部权限仍由宿主负责；不自动安装 Hermes skill。
 
 ## Calculation command and data boundary
 
@@ -19,14 +19,20 @@ to an existing check revision through `update --base REVISION --from FILE`.
 The revision chain preserves old questions and failures; stale-base updates are
 refused. See [research-handoff.md](research-handoff.md) for the exercised interface.
 
-Source/derivation references and observation text are reported-only. The host must
+Unbound source/derivation references and observation text are reported-only. Optional [evidence bindings](evidence.md) check local bytes or an exact run audit, never whether the source supports the scientific claim. The host must
 inspect the actual source, derivation or audited run; a valid handoff cannot prove
 a tool ran. Requested actions are never permission grants. The handoff does not
 change calculation-project stages, frozen criteria or execution authorization.
 If those records disagree, resolve the disagreement instead of letting a handoff
 silently override a suspended or unauthorized calculation.
 
-## Optional future model/tool controller (not implemented)
+## Implemented bounded local host adapter (v0.4)
+
+See [host-loop.md](host-loop.md) for the exact `prepare → execute → resume/status → accept` commands. Built-ins are bounded local file reading, exact run audit, and the existing reviewed/frozen Python runner. There is no arbitrary shell/tool registration or network/model call. The caller explicitly grants one exact request; `requested_actions` never supplies a grant. Persisted `running`/`unknown` attempts require manual review, not automatic retries. Completed output is hash-checked on resume and accepted into the original check separately.
+
+See [evidence.md](evidence.md) for binding and question/plan/observe/suspend shortcuts. `evidence check` is read-only; exit 0 means the check finished, not that every finding passed. Read its scoped currency findings. Neither host receipt hashes nor evidence currency certify physics.
+
+## Optional future model controller (not implemented)
 
 If a later host supplies a model and task-specific tools, a bounded adapter may use this boundary. These statuses below are proposal vocabulary, not outputs currently emitted by the CLI:
 

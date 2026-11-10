@@ -1,7 +1,7 @@
 """Command line interface: JSON on stdout, explicit failures, no hidden actions."""
 import argparse
 import json
-from . import __version__, core, runner, workflow, history, handoff
+from . import __version__, core, runner, workflow, history, handoff, evidence, quick
 from .validation import read_json
 
 
@@ -47,6 +47,10 @@ def main(argv=None):
         elif name == 'update':
             operation.add_argument('--from', dest='source', required=True)
             operation.add_argument('--base', required=True)
+    quick.register_cli(operations)
+    evidence.register_cli(commands)
+    from . import hostloop
+    hostloop.register_cli(commands)
     try:
         args = parser.parse_args(argv)
         if args.command == 'handoff':
@@ -56,10 +60,16 @@ def main(argv=None):
                 result = handoff.update_handoff(args.path, read_json(args.source), args.base)
             elif args.operation == 'history':
                 result = handoff.handoff_history(args.path)
+            elif args.operation in {'question', 'plan', 'observe', 'suspend'}:
+                result = quick.dispatch(args)
             else:
                 result = handoff.show_handoff(args.path)
                 if args.record_only:
                     result = result['record']
+        elif args.command == 'host':
+            result = hostloop.dispatch(args)
+        elif args.command == 'evidence':
+            result = evidence.dispatch(args)
         elif args.command == "init":
             result = core.initialize(args.path, args.id, args.domain)
         elif args.command == "validate":
@@ -80,7 +90,7 @@ def main(argv=None):
         else:
             result = runner.audit_project(args.path, args.run)
         print(json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False))
-        if args.command in {"history", "compare"} and result["status"] == "refused":
+        if isinstance(result, dict) and result.get('status') == 'refused':
             return 2
         return 1 if args.command == "run" and result["outcome"] != "criteria_met" else 0
     except (core.ContractError, OSError, ValueError) as exc:

@@ -1,8 +1,9 @@
 """Local research reports, not authorization, execution proof or authentication.
 
 SHA-256 links detect inconsistent local history, not a malicious whole-chain rewrite.
-References and observations are unverified reports; run references need host audit.
-No model, subprocess, network, publication or reference-file access happens here.
+References without bindings and observations remain unverified reports.
+No model, subprocess, network or publication happens here. Explicit new
+bindings are checked locally on update; show/history never read referents.
 """
 import hashlib
 import json
@@ -37,7 +38,13 @@ def _validate_record(record, prefix):
         fail('evidence must be a list')
     ids = set()
     for evidence in record['evidence']:
-        fields(evidence, {'id', 'kind', 'reference', 'summary'}, 'evidence')
+        required = {'id', 'kind', 'reference', 'summary'}
+        fields(evidence, required | ({'binding'} if isinstance(evidence, dict) and 'binding' in evidence else set()), 'evidence')
+        if 'binding' in evidence:
+            from .evidence import validate_binding
+            validate_binding(evidence['binding'])
+            if (evidence['kind'] == 'run') != (evidence['binding']['kind'] == 'run'):
+                fail('run evidence and run binding must agree')
         identifier(evidence['id'], 'evidence id')
         if evidence['id'] in ids:
             fail('duplicate evidence id')
@@ -176,6 +183,19 @@ def _report(document) -> dict:
     basis = next((entry['record'] for entry in document['revisions']
                   if observation and entry['revision'] == observation['basis_revision']), None)
     applies = basis is not None and _same_plan(basis, record)
+    # Bind legacy observations to the evidence at their introduction, not just
+    # to a matching plan. Old schema-1 chains may have reused an evidence ID.
+    origin = record
+    if observation:
+        for entry in reversed(document['revisions']):
+            if entry['record']['observation'] != observation:
+                break
+            origin = entry['record']
+    original_evidence = {item['id']: item for item in origin['evidence']}
+    current_evidence = {item['id']: item for item in record['evidence']}
+    changed_ids = [eid for eid in observation['evidence_ids']
+                   if original_evidence.get(eid) != current_evidence.get(eid)] if observation else []
+    applies = applies and not changed_ids
     if record['state'] == 'suspended':
         workflow = 'suspend'
     elif record['decision'] == 'human_review':
@@ -186,6 +206,7 @@ def _report(document) -> dict:
         workflow = 'review_observation' if applies else 'perform_check_in_host'
     return dict(project_id=document['project_id'], revision=latest['revision'],
                 record=record, workflow=workflow, observation_applies_to_current_check=applies,
+                affected_observation_evidence_ids=changed_ids,
                 automatic_execution=False, execution_authorized=False,
                 scientific_validity='not_assessed', publication='human-only',
                 evidence_verification='reported_only')
@@ -212,6 +233,20 @@ def update_handoff(root, record, base_revision):
         if base_revision != document['revisions'][-1]['revision']:
             fail('stale base revision')
         _validate_record(record, document['revisions'])
+        # IDs are immutable across history, even after removal. Legacy chains are
+        # read without rewriting or retroactively imposing this update-only rule.
+        from .evidence import verify_binding
+        for item in record['evidence']:
+            previous = [old for entry in document['revisions']
+                        for old in entry['record']['evidence'] if old['id'] == item['id']]
+            latest = next((old for old in document['revisions'][-1]['record']['evidence']
+                           if old['id'] == item['id']), None)
+            if (latest is not None and latest != item) or (latest is None and any(old != item for old in previous)):
+                fail('evidence id is immutable; use a new id')
+            if not previous and 'binding' in item:
+                verified = verify_binding(root, item['binding'])
+                if verified['status'] not in {'unchanged', 'verified'}:
+                    fail('new evidence binding does not match local evidence')
         document['revisions'].append(_entry(document['project_id'], base_revision, record))
         _atomic_write(target, document)
     return _report(document)

@@ -74,10 +74,11 @@ an actual written derivation can be recorded as an evidence entry:
 ```
 
 This example text is instructional, not an automatically verified derivation.
-Only use it as an observation after inspecting the argument. Evidence entries are
-always `reported_only`; the tool neither dereferences paths/URLs nor certifies
-that a source was read. A `run` reference likewise requires a separate real
-`audit` of the exact run before the host relies on it.
+Only use it as an observation after inspecting the argument. Unbound evidence
+references remain `reported_only`; handoff show/history do not dereference them.
+v0.4 optional [evidence bindings](evidence.md) freshly check explicit local file
+hashes or exact run audits. These checks establish byte/provenance currency, not
+that a source was understood or supports a scientific claim. URLs are not fetched.
 
 An `observation` binds its `summary` and `evidence_ids` to a `basis_revision` that
 already contained the check. It cannot reference a nonexistent revision or one
