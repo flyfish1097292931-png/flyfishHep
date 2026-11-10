@@ -1,7 +1,7 @@
 ---
 name: flyfishhep
 description: Use for high-energy theory research. Stage, test, report.
-version: 0.3.0
+version: 0.4.0
 author: Feiyu Deng, Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
@@ -28,7 +28,7 @@ Use when framing, deriving, checking, or writing a high-energy theory result. Do
 4. **Load one relevant domain module on demand.** Consult `docs/modules.md` only when its trigger matches. It contains method guidance, not implemented domain solvers. For cross-domain transfer, state the object map, preserved/lost structure, imported assumptions and failure domain.
 5. **Separate exploration from confirmation.** Explore freely but do not relabel a result confirmation retrospectively. Before a consequential test, fix the claim/scope, object, observable, evaluator, controls, success and disconfirming criteria. Check that the evaluator actually measures the stated physics. Changes after feedback require a new, disclosed test.
 6. **Use the CLI only within its contract.** Read `docs/contract.md`. The `next` command is deterministic navigation, not an LLM agent. The runner supports reviewed, snapshotted Python only; execution is local and not sandboxed. Never pass credentials or run untrusted code. Execute only with explicit authorization and `--allow-exec`; audit the exact run and preserve failures. Use `history` to inspect recorded runs and `compare --left ID --right ID` for explicit, freshly audited comparisons; different freezes are non-comparable and numerical deltas are not scientific rankings.
-7. **Preserve a compact handoff.** For literature, analytic or computational work, use `handoff init/show/update/history` as described in `docs/research-handoff.md`. Give the host the current question, assumptions, open questions and one next check; return only observations actually obtained, linked to the prior check revision. Evidence references are reported-only, and requested actions never grant permissions. Keep confirmation conditions fixed or explicitly return to exploration.
+7. **Preserve a compact handoff.** For literature, analytic or computational work, use `handoff init/show/update/history` as described in `docs/research-handoff.md`. Give the host the current question, assumptions, open questions and one next check; return only observations actually obtained, linked to the prior check revision. Unbound evidence references are reported-only. Use the optional `evidence bind-file/bind-run/check` commands for local byte/run currency, not semantic or scientific validation. The `question/plan/observe/suspend` shortcuts preserve the same journal gates. An explicitly approved `host` request can save real read/audit/reviewed-Python output; uncertain attempts require manual review, never blind retry. Read `docs/evidence.md` and `docs/host-loop.md` before using these features. Requested actions never grant permissions. Keep confirmation conditions fixed or explicitly return to exploration.
 8. **Report a scoped result.** Distinguish source-reported, derived, numerical, independently checked, heuristic, toy-model, negative, and unresolved outcomes. State assumptions and limitations. Hashes and software PASS do not certify physics.
 9. **Stop at the boundary.** Stop on user request, budget or authority limit, unsafe/missing capability, changed object/evaluator, or an uninformative next test. Offer the smallest useful next step. Claim promotion, submission, publication, and external side effects remain human-authorized.
 
