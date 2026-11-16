@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1 — alpha: complete reproducible use case
+
+- Add a complete AdS3 finite-cutoff walkthrough: bounded physical question, predeclared accuracy budget, retained approximation miss, one-field prediction revision, exact-model replay and version-bound research handoff.
+- Reuse the existing geodesic solver as a declared, snapshotted input; generate offline HTML/Markdown reports, a real-data SVG, command transcripts and an inspect-only preparation route.
+- Add end-to-end and refusal regressions, including explicit execution consent, non-overwrite/path boundaries, timeout transcript retention, and process/integration failures that must not be mistaken for the expected approximation miss.
+- Add a bilingual tutorial and an actual-run figure preview to the README. Keep static previews illustrative and numerical/scientific status separate.
+- No new runtime dependency, core behavior or evidence-schema change. This is a scripted reproduction of known geometry, not autonomous discovery, a new physics result or demonstrated user-efficiency improvement. Local raw execution bundles are not part of the public source release.
+
 ## 0.4.0 — alpha: evidence, bounded host work and maintenance
 
 - Bind local evidence to relative paths, exact content hashes and locators; freshly check drift, missing sources and explicit audited-run references without promoting scientific validity.

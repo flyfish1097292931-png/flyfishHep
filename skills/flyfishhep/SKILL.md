@@ -1,7 +1,7 @@
 ---
 name: flyfishhep
 description: Use for high-energy theory research. Stage, test, report.
-version: 0.4.0
+version: 0.4.1
 author: Feiyu Deng, Hermes Agent
 license: MIT
 platforms: [linux, macos, windows]
