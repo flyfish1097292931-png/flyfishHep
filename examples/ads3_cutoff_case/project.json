@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "id": "CASE-ADS3-CUTOFF-001",
+  "title": "When does the AdS3 UV logarithm approximate a finite-cutoff length?",
+  "stage": "construct",
+  "domain": "holography-gravity",
+  "question": "At fixed ell and L, does the prediction selected in study.json match the numerically integrated bare AdS3 geodesic length at all declared finite cutoffs within 1e-8 length units?",
+  "theory": {
+    "object": "Fixed-time Poincare AdS3 slice ds^2=L^2(dx^2+dz^2)/z^2.",
+    "spacetime_dimension": "3",
+    "signature": "(-,+,+), with positive definite fixed-time slice.",
+    "units": "x,z,ell,epsilon,L and proper length in one common length unit; logarithm arguments are dimensionless.",
+    "assumptions": [
+      "Static Poincare patch.",
+      "Endpoints at (+/-ell/2,epsilon), ell=2 and L=1.5 held fixed.",
+      "Geodesic is orthogonal circle R^2=(ell/2)^2+epsilon^2.",
+      "Known-result teaching case, not independent validation of holography."
+    ],
+    "boundary_conditions": "Endpoints at z=epsilon, x=+/-ell/2; epsilon grid in study.json.",
+    "observable": "Un-subtracted proper length between the two fixed-coordinate-separation cutoff endpoints.",
+    "regulator": "Finite positive radial cutoff epsilon; no subtraction.",
+    "limit_order": "All declared cutoffs retained. Only a stated small-epsilon expansion; no extrapolation.",
+    "normalization": "Proper length L times dimensionless hyperbolic line element; no division by 4G_N."
+  },
+  "claim": {
+    "statement": "The selected approximation/comparator matches the finite-cutoff quadrature at the declared accuracy; this is a tested candidate, not a pre-certified truth.",
+    "status": "exploratory",
+    "scope": "Only the stated fixed-ell geometry, finite grid and accuracy budget.",
+    "limitations": [
+      "Quadrature and antiderivative share the same geodesic geometry.",
+      "Simpson estimates are not rigorous error certificates.",
+      "Failure of a deliberately tight approximation gate does not invalidate its asymptotic use."
+    ],
+    "forbidden_inferences": [
+      "No exact entropy, RT-dictionary proof or new physics.",
+      "No agent-effectiveness, safety or generalization claim."
+    ]
+  },
+  "sources": [],
+  "protocol": {
+    "mode": "exploratory",
+    "inputs": [
+      "study.py",
+      "study.json",
+      "geodesic.py",
+      "notes.md"
+    ],
+    "command": [
+      "{python}",
+      "study.py",
+      "{output}"
+    ],
+    "timeout_seconds": 30,
+    "outputs": [
+      "result.json",
+      "data.csv"
+    ],
+    "metrics": [
+      {
+        "key": "max_model_abs_error",
+        "op": "le",
+        "threshold": 1e-08
+      },
+      {
+        "key": "max_quadrature_abs_error",
+        "op": "le",
+        "threshold": 1e-10
+      },
+      {
+        "key": "max_quadrature_error_estimate",
+        "op": "le",
+        "threshold": 1e-10
+      },
+      {
+        "key": "max_refinement_abs_difference",
+        "op": "le",
+        "threshold": 1e-10
+      }
+    ],
+    "disconfirming": "A model-gate miss with passing integration checks rejects the selected approximation only at the stated finite-grid accuracy budget.",
+    "independence": "Adaptive numerical integration vs analytic antiderivative, sharing the prescribed geometry. Tolerance refinement is numerical stability, not an independent derivation.",
+    "failure_interpretation": "Non-answer or failed numerical diagnostics stops the walkthrough. A model-gate miss is retained; no failed run is overwritten."
+  },
+  "authorization": {
+    "execution": "local-reviewed-only",
+    "network": false,
+    "publication": "human-only"
+  }
+}

@@ -4,7 +4,7 @@
 
 `flyfishHep` separates a reusable research process from personal memory and project history. Its small local runner can freeze a reviewed calculation, execute it on copied inputs after explicit opt-in, retain outputs and failures, and check declared numerical criteria. Domain modules give problem-specific working methods; they do not claim that the software solves every topic.
 
-> **Status: v0.4.0 alpha.** Code execution is not sandboxed. Integrity checks do not establish that a physical question was posed correctly or a claim is true. No autonomous scientific discovery, broad generalization, new result, independent citation check, or publication approval is implied.
+> **Status: v0.4.1 alpha.** Code execution is not sandboxed. Integrity checks do not establish that a physical question was posed correctly or a claim is true. No autonomous scientific discovery, broad generalization, new result, independent citation check, or publication approval is implied.
 
 [简体中文] `flyfishHep` 是可移植的高能理论研究工作流原型：保存问题、假设、计算协议和证据，再由研究者判断其物理意义。它不是自动物理发现系统，也不认证论文结论。
 
@@ -26,6 +26,33 @@ python -m unittest discover -s tests -v
 For a quick end-to-end check of the two reviewed teaching examples, run `python scripts/smoke_examples.py --allow-exec`. This explicitly executes the example programs in temporary workspaces and prints audited metrics; it does not retain research evidence after the smoke check.
 
 Read `docs/contract.md` for the v1 project JSON contract and runner trust boundary; `docs/research-workflow.md` for the scientific workflow; `docs/modules.md` for on-demand HEP methods; `docs/agent-integration.md` for an LLM-agent adapter boundary.
+
+## A complete worked case
+
+**Question:** at fixed endpoint separation, how accurate is the usual AdS3
+UV logarithm at a finite radial cutoff?
+
+```bash
+python scripts/run_ads3_case.py "$HOME/flyfishhep-cutoff-case" --allow-exec
+```
+
+After reviewing the example code and installing this checkout, this command
+creates a **new directory outside the source tree**, runs the real calculation,
+retains an expected approximation miss, revises only the comparator, replays the
+successful calculation, and produces an offline HTML report, CSV-backed plot,
+command transcript and versioned research handoff. Open the printed `index.html`.
+No model provider or private data is needed. It is a scripted reproduction of known
+geometry, not autonomous discovery or a claim of improved research efficiency.
+
+[Complete walkthrough / 完整使用案例](docs/complete-example.md) ·
+[Derivation and fixed protocol](examples/ads3_cutoff_case/notes.md)
+
+![Actual finite-cutoff approximation error](docs/assets/ads3-cutoff-error.svg)
+
+Illustrative output from the declared grid: the UV-log discrepancy reaches
+`0.1720233422` length units; the finite-cutoff comparator differs from quadrature
+by at most `8.88e-16` in the recorded run. The preview is a teaching snapshot,
+not a certificate for changed inputs; run the recipe to obtain current evidence.
 
 ## First project
 
